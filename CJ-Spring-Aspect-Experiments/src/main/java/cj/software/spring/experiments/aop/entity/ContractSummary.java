@@ -5,11 +5,16 @@ import java.time.OffsetDateTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import cj.software.spring.experiments.aop.jaxb.OffsetDateTimeAdapter;
 
 @XmlType(name = "contract-summary", propOrder =
 { "id", "partner1", "partner2", "expirationDate"
@@ -22,16 +27,24 @@ public class ContractSummary
 	private static final long serialVersionUID = 1L;
 
 	@NotNull
+	@XmlAttribute(name = "id", required = true)
 	private Long id;
 
 	@NotBlank
+	@XmlElement(name = "partner-1", required = true)
 	private String partner1;
 
 	@NotBlank
+	@XmlElement(name = "partner-2", required = true)
 	private String partner2;
 
-	@NotNull
+	@XmlElement(name = "expiration-date")
+	@XmlJavaTypeAdapter(value = OffsetDateTimeAdapter.class)
 	private OffsetDateTime expirationDate;
+
+	ContractSummary()
+	{
+	}
 
 	public ContractSummary(
 			@NotNull Long id,
