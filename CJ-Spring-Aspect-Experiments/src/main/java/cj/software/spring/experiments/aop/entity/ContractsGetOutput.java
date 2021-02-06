@@ -3,6 +3,7 @@ package cj.software.spring.experiments.aop.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -23,6 +24,7 @@ public class ContractsGetOutput
 
 	@XmlElementWrapper(name = "contracts", required = true)
 	@XmlElement(name = "summary")
+	@Valid
 	private List<ContractSummary> entries;
 
 	ContractsGetOutput()
