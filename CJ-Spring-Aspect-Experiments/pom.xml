@@ -18,7 +18,7 @@
 	<description>Experiments about AOP in Spring</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<lang3.version>3.11	</lang3.version>
 	</properties>
 	<dependencies>
