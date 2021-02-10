@@ -13,13 +13,27 @@ import org.springframework.stereotype.Component;
 public class CorrelationIdSetter
 {
 
-	@Around("execution(* cj.software.spring.experiments.aop.rest.*.*(..))")
-	public Object setCorrelationId(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(* cj.software.spring.experiments.aop.rest..*.*(..))")
+	public Object aroundGlobal(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		Object result;
+		if (MDC.get("correlationId") == null)
+		{
+			result = around(joinPoint, UUID.randomUUID().toString());
+		}
+		else
+		{
+			result = joinPoint.proceed();
+		}
+		return result;
+	}
+
+	private Object around(ProceedingJoinPoint joinPoint, String correlationId) throws Throwable
 	{
 		String oldCorrelationId = MDC.get("correlationId");
 		try
 		{
-			MDC.put("correlationId", UUID.randomUUID().toString());
+			MDC.put("correlationId", correlationId);
 			Object result = joinPoint.proceed();
 			return result;
 		}
@@ -27,5 +41,13 @@ public class CorrelationIdSetter
 		{
 			MDC.put("correlationId", oldCorrelationId);
 		}
+	}
+
+	@Around("execution(* cj.software.spring.experiments.aop.rest.contract.*.*(Long, ..))"
+			+ "&& args(id)")
+	public Object aroundContract(ProceedingJoinPoint joinPoint, Long id) throws Throwable
+	{
+		String correlationId = String.format("Contract %d", id);
+		return around(joinPoint, correlationId);
 	}
 }

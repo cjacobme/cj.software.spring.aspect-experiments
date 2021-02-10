@@ -1,4 +1,4 @@
-package cj.software.spring.experiments.aop.rest;
+package cj.software.spring.experiments.aop.rest.contract;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import cj.software.spring.experiments.aop.entity.ContractsGetOutput;
 @RequestMapping(path = "/contracts", produces =
 { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE
 })
-public class RestEndpoint
+public class ContractRestEndpoint
 {
 	private Logger logger = LogManager.getFormatterLogger();
 
