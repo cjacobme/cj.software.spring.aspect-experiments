@@ -1,6 +1,7 @@
 package cj.software.spring.experiments.aop.rest.contract;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,9 +40,9 @@ public class ContractRestEndpoint
 	}
 
 	@GetMapping(path = "{id}")
-	public ContractGetOutput getContractDetail(@PathVariable(name = "id", required = true) Long id)
+	public ContractGetOutput getContractDetail(@PathVariable(name = "id", required = true) UUID id)
 	{
-		this.logger.info("download contract details for %d...", id);
+		this.logger.info("download contract details for %s...", id);
 		ContractDetail contractDetail = this.contractRepository.getContractDetail(id);
 		ContractGetOutput result = new ContractGetOutput(contractDetail);
 		this.logger.info("return detail");

@@ -1,5 +1,7 @@
 package cj.software.spring.experiments.aop.spring;
 
+import java.util.UUID;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,11 +15,11 @@ public class CorrelationIdSetterForContract
 		extends CorrelationIdSetter
 {
 
-	@Around("execution(* cj.software.spring.experiments.aop.rest.contract.*.*(Long, ..))"
+	@Around("execution(* cj.software.spring.experiments.aop.rest.contract.*.*(java.util.UUID, ..))"
 			+ "&& args(id)")
-	public Object aroundContract(ProceedingJoinPoint joinPoint, Long id) throws Throwable
+	public Object aroundContract(ProceedingJoinPoint joinPoint, UUID id) throws Throwable
 	{
-		String correlationId = String.format("Contract %d", id);
+		String correlationId = id.toString();
 		return around(joinPoint, correlationId);
 	}
 }

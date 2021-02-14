@@ -2,11 +2,13 @@ package cj.software.spring.experiments.aop.entity;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -28,7 +30,7 @@ public class ContractSummary
 
 	@NotNull
 	@XmlAttribute(name = "id", required = true)
-	private Long id;
+	private UUID id;
 
 	@NotBlank
 	@XmlElement(name = "partner-1", required = true)
@@ -46,20 +48,7 @@ public class ContractSummary
 	{
 	}
 
-	public ContractSummary(
-			@NotNull Long id,
-			@NotBlank String partner1,
-			@NotBlank String partner2,
-			@NotNull OffsetDateTime expirationDate)
-	{
-		super();
-		this.id = id;
-		this.partner1 = partner1;
-		this.partner2 = partner2;
-		this.expirationDate = expirationDate;
-	}
-
-	public Long getId()
+	public UUID getId()
 	{
 		return this.id;
 	}
@@ -77,6 +66,26 @@ public class ContractSummary
 	public OffsetDateTime getExpirationDate()
 	{
 		return this.expirationDate;
+	}
+
+	private void setId(UUID id)
+	{
+		this.id = id;
+	}
+
+	private void setPartner1(String partner1)
+	{
+		this.partner1 = partner1;
+	}
+
+	private void setPartner2(String partner2)
+	{
+		this.partner2 = partner2;
+	}
+
+	private void setExpirationDate(OffsetDateTime expirationDate)
+	{
+		this.expirationDate = expirationDate;
 	}
 
 	@Override
@@ -110,5 +119,52 @@ public class ContractSummary
 		CompareToBuilder builder = new CompareToBuilder().append(this.id, other.id);
 		int result = builder.build();
 		return result;
+	}
+
+	public static Builder builder()
+	{
+		return new Builder();
+	}
+
+	@XmlTransient
+	public static class Builder
+	{
+		protected ContractSummary instance;
+
+		protected Builder()
+		{
+			this.instance = new ContractSummary();
+		}
+
+		public Builder withId(UUID id)
+		{
+			this.instance.setId(id);
+			return this;
+		}
+
+		public Builder withPartner1(String partner1)
+		{
+			this.instance.setPartner1(partner1);
+			return this;
+		}
+
+		public Builder withPartner2(String partner2)
+		{
+			this.instance.setPartner2(partner2);
+			return this;
+		}
+
+		public Builder withExpirationDate(OffsetDateTime expirationDate)
+		{
+			this.instance.setExpirationDate(expirationDate);
+			return this;
+		}
+
+		public ContractSummary build()
+		{
+			ContractSummary result = this.instance;
+			this.instance = null;
+			return result;
+		}
 	}
 }

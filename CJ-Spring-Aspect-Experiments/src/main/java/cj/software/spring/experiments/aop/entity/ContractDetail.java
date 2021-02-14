@@ -3,11 +3,13 @@ package cj.software.spring.experiments.aop.entity;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.Period;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -49,29 +51,8 @@ public class ContractDetail
 	@XmlJavaTypeAdapter(value = PeriodAdapter.class)
 	private Period billingPeriod;
 
-	ContractDetail()
+	private ContractDetail()
 	{
-	}
-
-	public ContractDetail(
-			Long id,
-			String partner1,
-			String partner2,
-			OffsetDateTime expiration,
-			@NotNull OffsetDateTime signedTimestamp,
-			@NotNull LocalDate deliveryStart,
-			@NotNull LocalDate deliveryEnd,
-			double deliveryAmount,
-			double price,
-			@NotNull Period billingPeriod)
-	{
-		super(id, partner1, partner2, expiration);
-		this.signedTimestamp = signedTimestamp;
-		this.deliveryStart = deliveryStart;
-		this.deliveryEnd = deliveryEnd;
-		this.deliveryAmount = deliveryAmount;
-		this.price = price;
-		this.billingPeriod = billingPeriod;
 	}
 
 	public OffsetDateTime getSignedTimestamp()
@@ -102,5 +83,122 @@ public class ContractDetail
 	public Period getBillingPeriod()
 	{
 		return this.billingPeriod;
+	}
+
+	private void setSignedTimestamp(OffsetDateTime signedTimestamp)
+	{
+		this.signedTimestamp = signedTimestamp;
+	}
+
+	private void setDeliveryStart(LocalDate deliveryStart)
+	{
+		this.deliveryStart = deliveryStart;
+	}
+
+	private void setDeliveryEnd(LocalDate deliveryEnd)
+	{
+		this.deliveryEnd = deliveryEnd;
+	}
+
+	private void setDeliveryAmount(double deliveryAmount)
+	{
+		this.deliveryAmount = deliveryAmount;
+	}
+
+	private void setPrice(double price)
+	{
+		this.price = price;
+	}
+
+	private void setBillingPeriod(Period billingPeriod)
+	{
+		this.billingPeriod = billingPeriod;
+	}
+
+	public static Builder builder()
+	{
+		return new Builder();
+	}
+
+	@XmlTransient
+	public static class Builder
+			extends ContractSummary.Builder
+	{
+		protected Builder()
+		{
+			super.instance = new ContractDetail();
+		}
+
+		@Override
+		public Builder withId(UUID id)
+		{
+			super.withId(id);
+			return this;
+		}
+
+		@Override
+		public Builder withPartner1(String partner1)
+		{
+			super.withPartner1(partner1);
+			return this;
+		}
+
+		@Override
+		public Builder withPartner2(String partner2)
+		{
+			super.withPartner2(partner2);
+			return this;
+		}
+
+		@Override
+		public Builder withExpirationDate(OffsetDateTime expirationDate)
+		{
+			super.withExpirationDate(expirationDate);
+			return this;
+		}
+
+		public Builder withBillingPeriod(Period billingPeriod)
+		{
+			((ContractDetail) this.instance).setBillingPeriod(billingPeriod);
+			return this;
+		}
+
+		public Builder withDeliveryAmount(double deliveryAmount)
+		{
+			((ContractDetail) this.instance).setDeliveryAmount(deliveryAmount);
+			return this;
+		}
+
+		public Builder withDeliveryStart(LocalDate deliveryStart)
+		{
+			((ContractDetail) this.instance).setDeliveryStart(deliveryStart);
+			return this;
+		}
+
+		public Builder withDeliveryEnd(LocalDate deliveryEnd)
+		{
+			((ContractDetail) this.instance).setDeliveryEnd(deliveryEnd);
+			return this;
+		}
+
+		public Builder withPrice(double price)
+		{
+			((ContractDetail) this.instance).setPrice(price);
+			return this;
+		}
+
+		public Builder withSignedTimestamp(OffsetDateTime signedTimestamp)
+		{
+			((ContractDetail) this.instance).setSignedTimestamp(signedTimestamp);
+			return this;
+		}
+
+		@Override
+		public ContractDetail build()
+		{
+			ContractDetail result = (ContractDetail) this.instance;
+			this.instance = null;
+			return result;
+		}
 	}
 }
