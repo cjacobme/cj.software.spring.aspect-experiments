@@ -16,10 +16,10 @@ public class CorrelationIdSetterForContract
 {
 
 	@Around("execution(* cj.software.spring.experiments.aop.rest.contract.*.*(java.util.UUID, ..))"
-			+ "&& args(id)")
+			+ "&& args(id, ..)")
 	public Object aroundContract(ProceedingJoinPoint joinPoint, UUID id) throws Throwable
 	{
-		String correlationId = id.toString();
+		String correlationId = "C " + id.toString();
 		return around(joinPoint, correlationId);
 	}
 }
