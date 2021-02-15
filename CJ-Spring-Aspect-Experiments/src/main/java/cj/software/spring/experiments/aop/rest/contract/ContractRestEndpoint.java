@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,8 @@ import cj.software.spring.experiments.aop.entity.ContractGetOutput;
 import cj.software.spring.experiments.aop.entity.ContractServicesGetOutput;
 import cj.software.spring.experiments.aop.entity.ContractSummary;
 import cj.software.spring.experiments.aop.entity.ContractsGetOutput;
+import cj.software.spring.experiments.aop.entity.Service;
+import cj.software.spring.experiments.aop.entity.ServiceDetailGetOutput;
 
 @RestController
 @RequestMapping(path = "/contracts", produces =
@@ -82,6 +85,8 @@ public class ContractRestEndpoint
 
 	@GetMapping(path = "{id}/services")
 	@ResponseBody
+	@Valid
+	@NotNull
 	public ContractServicesGetOutput getServices(
 			@PathVariable(name = "id", required = true) UUID id)
 	{
@@ -93,5 +98,26 @@ public class ContractRestEndpoint
 				.build();
 		this.logger.info("return %d service ids", servicesIds.size());
 		return result;
+	}
+
+	@GetMapping(path = "{contract-id}/services/{service-id}")
+	@ResponseBody
+	@Valid
+	@NotNull
+	public ServiceDetailGetOutput getServiceDetail(
+			@PathVariable(name = "contract-id", required = true) UUID contractId,
+			@PathVariable(name = "service-id", required = true) UUID serviceId)
+	{
+		this.logger.info("get detail of service %s...", serviceId);
+		ContractDetail contractDetail = this.contractRepository.getContractDetail(contractId);
+		Service service = contractDetail.getService(serviceId);
+		ServiceDetailGetOutput result = ServiceDetailGetOutput.builder()
+				.withService(service)
+				.build();
+		return result;
+	}
+
+	{
+
 	}
 }
