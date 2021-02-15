@@ -1,5 +1,6 @@
 package cj.software.spring.experiments.aop.rest.contract;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ import cj.software.spring.experiments.aop.dao.ContractRepository;
 import cj.software.spring.experiments.aop.entity.AddServicePostInput;
 import cj.software.spring.experiments.aop.entity.ContractDetail;
 import cj.software.spring.experiments.aop.entity.ContractGetOutput;
+import cj.software.spring.experiments.aop.entity.ContractServicesGetOutput;
 import cj.software.spring.experiments.aop.entity.ContractSummary;
 import cj.software.spring.experiments.aop.entity.ContractsGetOutput;
 
@@ -75,6 +77,21 @@ public class ContractRestEndpoint
 		UriComponents uriComponents = uriComponentsBuilder.path(
 				"contracts/{contract-id}/services/{service-id}").buildAndExpand(id, serviceId);
 		ResponseEntity<Void> result = ResponseEntity.created(uriComponents.toUri()).build();
+		return result;
+	}
+
+	@GetMapping(path = "{id}/services")
+	@ResponseBody
+	public ContractServicesGetOutput getServices(
+			@PathVariable(name = "id", required = true) UUID id)
+	{
+		this.logger.info("list service ids...");
+		ContractDetail contractDetail = this.contractRepository.getContractDetail(id);
+		Collection<UUID> servicesIds = contractDetail.getServicesIds();
+		ContractServicesGetOutput result = ContractServicesGetOutput.builder()
+				.withServiceIds(servicesIds)
+				.build();
+		this.logger.info("return %d service ids", servicesIds.size());
 		return result;
 	}
 }
