@@ -3,8 +3,12 @@ package cj.software.spring.experiments.aop.entity;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.Period;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -50,6 +54,10 @@ public class ContractDetail
 	@XmlElement(name = "billing-period", required = true)
 	@XmlJavaTypeAdapter(value = PeriodAdapter.class)
 	private Period billingPeriod;
+
+	@Valid
+	@XmlTransient
+	private Map<UUID, Service> services = new HashMap<>();
 
 	private ContractDetail()
 	{
@@ -113,6 +121,22 @@ public class ContractDetail
 	private void setBillingPeriod(Period billingPeriod)
 	{
 		this.billingPeriod = billingPeriod;
+	}
+
+	public Service addService(UUID uuid, Service service)
+	{
+		Service result = this.services.put(uuid, service);
+		return result;
+	}
+
+	public Collection<UUID> getServicesIds()
+	{
+		return this.services.keySet();
+	}
+
+	public Service getService(UUID uuid)
+	{
+		return this.services.get(uuid);
 	}
 
 	public static Builder builder()
