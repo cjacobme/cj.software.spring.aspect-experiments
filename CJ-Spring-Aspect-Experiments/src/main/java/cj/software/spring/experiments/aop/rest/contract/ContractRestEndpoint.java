@@ -3,16 +3,23 @@ package cj.software.spring.experiments.aop.rest.contract;
 import java.util.List;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cj.software.spring.experiments.aop.dao.ContractRepository;
+import cj.software.spring.experiments.aop.entity.AddServicePostInput;
+import cj.software.spring.experiments.aop.entity.AddServicePostOutput;
 import cj.software.spring.experiments.aop.entity.ContractDetail;
 import cj.software.spring.experiments.aop.entity.ContractGetOutput;
 import cj.software.spring.experiments.aop.entity.ContractSummary;
@@ -46,6 +53,23 @@ public class ContractRestEndpoint
 		ContractDetail contractDetail = this.contractRepository.getContractDetail(id);
 		ContractGetOutput result = new ContractGetOutput(contractDetail);
 		this.logger.info("return detail");
+		return result;
+	}
+
+	@PostMapping(path = "{id}/add-service")
+	@ResponseBody
+	@Valid
+	public AddServicePostOutput addService(
+			@PathVariable(name = "id", required = true) UUID id,
+			@RequestBody AddServicePostInput input)
+	{
+		this.logger.info("add a new service...");
+		ContractDetail contractDetail = this.contractRepository.getContractDetail(id);
+		UUID serviceId = UUID.randomUUID();
+		contractDetail.addService(serviceId, input.getService());
+		AddServicePostOutput result = AddServicePostOutput.builder()
+				.withServiceId(serviceId)
+				.build();
 		return result;
 	}
 }
